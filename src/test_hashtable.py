@@ -195,11 +195,15 @@ class TestHashTable(unittest.TestCase):
     def test_hash_table_removes_correctly_rigorously(self):
         ht = HashTable(8)
 
+        self.assertTrue(ht.count == 0)
+
         ht.insert("key-0", "val-0")
         ht.insert("key-1", "val-1")
+        self.assertTrue(ht.count == 2)
         ht.insert("key-2", "val-2")
         ht.insert("key-3", "val-3")
         ht.insert("key-4", "val-4")
+        self.assertTrue(ht.count == 5)
 
         return_value = ht.retrieve("key-0")
         self.assertTrue(return_value == "val-0")
@@ -223,6 +227,7 @@ class TestHashTable(unittest.TestCase):
         self.assertTrue(return_value == "val-3")
         return_value = ht.retrieve("key-4")
         self.assertTrue(return_value == None)
+        self.assertTrue(ht.count == 4)
 
         ht.remove("key-3")
         return_value = ht.retrieve("key-0")
@@ -235,6 +240,7 @@ class TestHashTable(unittest.TestCase):
         self.assertTrue(return_value == None)
         return_value = ht.retrieve("key-4")
         self.assertTrue(return_value == None)
+        self.assertTrue(ht.count == 3)
 
         ht.insert("key19", "value19")
         return_value = ht.retrieve("key-0")
@@ -249,6 +255,7 @@ class TestHashTable(unittest.TestCase):
         self.assertTrue(return_value == None)
         return_value = ht.retrieve("key19")
         self.assertTrue(return_value == "value19")
+        self.assertTrue(ht.count == 4)
 
         ht.remove("key-2")
         ht.remove("key-1")
