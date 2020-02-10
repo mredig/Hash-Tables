@@ -121,6 +121,9 @@ class TestHashTable(unittest.TestCase):
         return_value = ht.retrieve("key-9")
         self.assertTrue(return_value == "val-9")
 
+        self.assertTrue(len(ht.storage) == ht.capacity)
+        self.assertTrue(ht.capacity == 16)
+
         ht.remove("key-9")
         ht.remove("key-8")
         ht.remove("key-7")
@@ -128,6 +131,8 @@ class TestHashTable(unittest.TestCase):
         ht.remove("key-5")
         ht.remove("key-4")
         ht.remove("key-3")
+        self.assertTrue(len(ht.storage) == ht.capacity)
+        self.assertTrue(ht.capacity == 8)
         ht.remove("key-2")
         ht.remove("key-1")
         ht.remove("key-0")
@@ -156,6 +161,10 @@ class TestHashTable(unittest.TestCase):
     def test_hash_table_resize(self):
         ht = HashTable(8)
 
+        self.assertTrue(len(ht.storage) == ht.capacity)
+        self.assertTrue(ht.capacity == 8)
+
+
         ht.insert("key-0", "val-0")
         ht.insert("key-1", "val-1")
         ht.insert("key-2", "val-2")
@@ -167,9 +176,8 @@ class TestHashTable(unittest.TestCase):
         ht.insert("key-8", "val-8")
         ht.insert("key-9", "val-9")
 
-        ht.resize()
-
-        self.assertTrue(len(ht.storage) == 16)
+        self.assertTrue(len(ht.storage) == ht.capacity)
+        self.assertTrue(ht.capacity == 16)
 
         return_value = ht.retrieve("key-0")
         self.assertTrue(return_value == "val-0")

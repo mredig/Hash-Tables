@@ -116,6 +116,7 @@ class HashTable:
         if self.storage[index] is None:
             self.storage[index] = newNode
             self.count += 1
+            self.resizeUp()
         else:
             self.storage[index].setValueForKey(value, key)
 
@@ -133,6 +134,7 @@ class HashTable:
             if baseNode.key == key:
                 self.storage[index] = baseNode.next
                 self.count -= 1
+                self.resizeDown()
                 return key
             else:
                 currentNode = baseNode
@@ -141,6 +143,7 @@ class HashTable:
                     if nextNode.key == key:
                         currentNode.next = nextNode.next
                         self.count -= 1
+                        self.resizeDown()
                         return key
                     else:
                         currentNode = nextNode
@@ -165,13 +168,9 @@ class HashTable:
         else:
             return None
 
-    def resize(self):
-        '''
-        Doubles the capacity of the hash table and
-        rehash all key/value pairs.
-
-        Fill this in.
-        '''
+    def resizeUp(self):
+        if self._loadCapacity() < 0.7:
+            return
         newHash = HashTable(self.capacity * 2)
         for node in self.storage:
             currentNode = node
@@ -181,6 +180,21 @@ class HashTable:
         self.capacity = newHash.capacity
         self.storage = newHash.storage
 
+    def resizeDown(self):
+        if self.capacity < 4:
+            return
+        if self._loadCapacity() > 0.2:
+            return
+        newHash = HashTable(self.capacity // 2)
+        for node in self.storage:
+            currentNode = node
+            while currentNode is not None:
+                newHash.insert(currentNode.key, currentNode.value)
+                currentNode = currentNode.next
+
+        self.capacity = newHash.capacity
+        self.storage = newHash.storage
+        self.count = newHash.count
 
 if __name__ == "__main__":
     ht = HashTable(2)
@@ -198,7 +212,6 @@ if __name__ == "__main__":
 
     # Test resizing
     old_capacity = len(ht.storage)
-    ht.resize()
     new_capacity = len(ht.storage)
 
     print(f"\nResized from {old_capacity} to {new_capacity}.\n")
